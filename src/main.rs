@@ -1,7 +1,8 @@
-use crate::day1::{day1};
 
-mod day1;
+mod aoc2015;
+mod aoc2021;
 
 fn main() {
-    day1();
+    aoc2015::day1::execute();
+    aoc2021::day1::execute();
 }

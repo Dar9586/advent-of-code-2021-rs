@@ -3,13 +3,13 @@ use std::io::Read;
 
 use text_io::try_read;
 
-pub fn day1() {
+pub fn execute() {
     assert_eq!(day1x1(), 1624);
     assert_eq!(day1x2(), 1653);
 }
 
 fn day1x1() -> u32 {
-    let mut file = File::open("./inputs/day1").expect("Missing input file").bytes().map(|ch| ch.unwrap());
+    let mut file = File::open("./inputs/2021/day1.txt").expect("Missing input file").bytes().map(|ch| ch.unwrap());
     let mut old: Option<u32> = None;
     let mut increased = 0u32;
 
@@ -25,7 +25,7 @@ fn day1x1() -> u32 {
 }
 
 fn day1x2() -> u32 {
-    let mut file = File::open("./inputs/day1").expect("Missing input file").bytes().map(|ch| ch.unwrap());
+    let mut file = File::open("./inputs/2021/day1.txt").expect("Missing input file").bytes().map(|ch| ch.unwrap());
     let mut vec: Vec<u32> = Vec::new();
     let mut increased = 0u32;
     let mut old: Option<u32> = None;
