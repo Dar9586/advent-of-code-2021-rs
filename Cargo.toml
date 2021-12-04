@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 text_io = "0.1.9"
 scan_fmt = "0.2.6"
+retain_mut = "0.1.5"
