@@ -5,7 +5,7 @@ mod aoc2021;
 mod aoc2016;
 
 fn main() {
-    aoc2021::day4::execute();
+    aoc2021::day5::execute();
 }
 
 #[test]
