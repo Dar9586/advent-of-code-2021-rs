@@ -4,30 +4,33 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+use itertools::Itertools;
+
 pub fn execute() {
     assert_eq!(day5x1(), 5147);
     assert_eq!(day5x2(), 16925);
 }
 
-#[derive(Default,Debug,Copy, Clone,Eq, PartialEq,Hash)]
-struct Point{
-    x:u16,
-    y:u16
-}
-#[derive(Debug,Copy, Clone)]
-struct Pipe{
-    from:Point,
-    to:Point
+#[derive(Default, Debug, Copy, Clone, Eq, PartialEq, Hash)]
+struct Point {
+    x: u16,
+    y: u16,
 }
 
-impl Point{
-    fn new(x:u16,y:u16)->Self{
-        Point{x,y}
+#[derive(Debug, Copy, Clone)]
+struct Pipe {
+    from: Point,
+    to: Point,
+}
+
+impl Point {
+    fn new(x: u16, y: u16) -> Self {
+        Point { x, y }
     }
 }
 
-impl Pipe{
-    fn from_coord(coords:(u16,u16,u16,u16))->Self{
+impl Pipe {
+    fn from_coord(coords: (u16, u16, u16, u16)) -> Self {
         Pipe{
             from: Point::new(coords.0,coords.1),
             to: Point::new(coords.2,coords.3)
@@ -58,23 +61,40 @@ fn read_input()->Vec<Pipe>{
 }
 
 fn day5(use_diagonals:bool) -> usize {
-    let mut pipes=read_input();
-    let mut map:HashMap<Point,u16>=HashMap::new();
+    let mut pipes = read_input();
+    let mut map: HashMap<Point, u16> = HashMap::new();
     if !use_diagonals {
         pipes.retain(|el| el.from.x == el.to.x || el.from.y == el.to.y);
     }
-    for pipe in pipes{
-        for p in pipe.points(){
-            map.insert(p,map.get(&p).unwrap_or(&0)+1);
+    for pipe in pipes {
+        for p in pipe.points() {
+            map.insert(p, map.get(&p).unwrap_or(&0) + 1);
         }
     }
-    map.iter().filter(|el|*el.1>1).count()
+    map.iter().filter(|el| *el.1 > 1).count()
+}
+
+//Alternative solution
+fn day5_2(use_diagonals: bool) -> usize {
+    BufReader::new(File::open("./inputs/2021/day5.txt").unwrap())
+        .lines()
+        .map(|line|
+            Pipe::from_coord(scan_fmt!(&line.unwrap(),"{},{} -> {},{}",u16,u16,u16,u16).unwrap())
+        )
+        .filter(|el| use_diagonals || el.from.x == el.to.x || el.from.y == el.to.y)
+        .map(|el| el.points())
+        .flatten()
+        .zip(0..)
+        .into_group_map()
+        .values()
+        .filter(|x| x.len() > 1)
+        .count()
 }
 
 fn day5x1() -> usize {
-   day5(false)
+    day5_2(false)
 }
 
 fn day5x2() -> usize {
-    day5(true)
+    day5_2(true)
 }

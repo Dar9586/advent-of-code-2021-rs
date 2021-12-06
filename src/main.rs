@@ -5,14 +5,17 @@ mod aoc2021;
 mod aoc2016;
 
 fn main() {
-    aoc2021::day5::execute();
+
 }
 
 #[test]
-fn test(){
+fn test() {
     aoc2015::day1::execute();
+    aoc2016::day1::execute();
     aoc2021::day1::execute();
     aoc2021::day2::execute();
     aoc2021::day3::execute();
-    aoc2016::day1::execute();
+    aoc2021::day4::execute();
+    aoc2021::day5::execute();
+    aoc2021::day6::execute();
 }
