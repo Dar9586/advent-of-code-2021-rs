@@ -1,41 +1,37 @@
-use std::fs::File;
-use std::io::Read;
+use aoc_runner_derive::aoc;
+use aoc_runner_derive::aoc_generator;
 
-use text_io::try_read;
+type Gift = u32;
 
-pub fn execute() {
-    assert_eq!(day1x1(), 1624);
-    assert_eq!(day1x2(), 1653);
+#[aoc_generator(day1)]
+fn read_input(input: &str) -> Vec<Gift> {
+    input.lines().map(|e| e.parse().unwrap()).collect()
 }
 
-fn day1x1() -> u32 {
-    let mut file = File::open("./inputs/2021/day1.txt").expect("Missing input file").bytes().map(|ch| ch.unwrap());
+#[aoc(day1, part1)]
+fn day1x1(input: &[Gift]) -> u32 {
     let mut old: Option<u32> = None;
     let mut increased = 0u32;
 
-    while let Ok(k) = try_read!("{}",file) {
+    for k in input {
         if let Some(val) = old {
-            if k > val {
+            if *k > val {
                 increased += 1;
             }
         }
-        old = Some(k);
+        old = Some(*k);
     }
     increased
 }
 
-fn day1x2() -> u32 {
-    let mut file = File::open("./inputs/2021/day1.txt").expect("Missing input file").bytes().map(|ch| ch.unwrap());
-    let mut vec: Vec<u32> = Vec::new();
+
+#[aoc(day1, part2)]
+fn day1x2(input: &[Gift]) -> u32 {
     let mut increased = 0u32;
     let mut old: Option<u32> = None;
 
-    while let Ok(k) = try_read!("{}",file) {
-        vec.push(k);
-    }
-
-    for i in 0..vec.len() - 2 {
-        let sum = *(&vec[i..i + 3].iter().sum());
+    for i in 0..input.len() - 2 {
+        let sum = *(&input[i..i + 3].iter().sum());
         if let Some(val) = old {
             if sum > val {
                 increased += 1;

@@ -1,8 +1,8 @@
 use std::convert::TryInto;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::slice::Iter;
 use std::str::FromStr;
 
+use aoc_runner_derive::aoc;
 use retain_mut::RetainMut;
 
 #[derive(Default)]
@@ -14,17 +14,13 @@ struct Board {
 }
 
 impl Board {
-    fn from_reader(reader: &mut BufReader<File>) -> Self {
+    fn from_reader(reader: &mut Iter<&str>) -> Self {
         let mut board = Board::default();
-        let mut line = String::new();
         for i in 0..5 {
-            line.clear();
-            reader.read_line(&mut line).unwrap();
-            let vec: Vec<u64> = line.trim().split_whitespace().map(|x| u64::from_str(x).unwrap()).collect();
+            let vec: Vec<u64> = reader.next().unwrap().trim().split_whitespace().map(|x| u64::from_str(x).unwrap()).collect();
             board.sum += vec.iter().fold(0u64, |acc, val| acc + *val);
             board.board[i] = vec.try_into().unwrap();
         }
-        reader.read_line(&mut line).unwrap();
         board
     }
     fn extract_number(&mut self, val: u64) -> bool {
@@ -43,31 +39,25 @@ impl Board {
 }
 
 
-pub fn execute() {
-    assert_eq!(day4x1(), 55770);
-    assert_eq!(day4x2(), 2980);
-}
-
-fn read_numbers(reader: &mut BufReader<File>) -> Vec<u64> {
-    let mut line = String::new();
-    reader.read_line(&mut line).unwrap();
-    let vec: Vec<u64> = line.trim().split(',').map(|x| u64::from_str(x).unwrap()).collect();
-    reader.read_line(&mut line).unwrap();
+fn read_numbers(reader: &mut Iter<&str>) -> Vec<u64> {
+    let vec: Vec<u64> = reader.next().unwrap().trim().split(',').map(|x| u64::from_str(x).unwrap()).collect();
     vec
 }
 
-fn read_data() -> (Vec<u64>, Vec<Board>) {
-    let mut reader = BufReader::new(File::open("./inputs/2021/day4.txt").unwrap());
+fn read_data(input: &str) -> (Vec<u64>, Vec<Board>) {
+    let lines: Vec<&str> = input.lines().filter(|x| !x.is_empty()).collect();
+    let mut line = lines.iter();
     let mut boards: Vec<Board> = Vec::new();
-    let numbers = read_numbers(&mut reader);
+    let numbers = read_numbers(&mut line);
     for _ in 0..100 {
-        boards.push(Board::from_reader(&mut reader));
+        boards.push(Board::from_reader(&mut line));
     }
     (numbers, boards)
 }
 
-fn day4x1() -> u64 {
-    let (numbers, mut boards) = read_data();
+#[aoc(day4, part1)]
+fn day4x1(input: &str) -> u64 {
+    let (numbers, mut boards) = read_data(input);
     for val in numbers {
         for board in boards.as_mut_slice() {
             if board.extract_number(val) {
@@ -78,10 +68,10 @@ fn day4x1() -> u64 {
     unreachable!()
 }
 
-
-fn day4x2() -> u64 {
+#[aoc(day4, part2)]
+fn day4x2(input: &str) -> u64 {
     let mut vec = Vec::new();
-    let (numbers, mut boards) = read_data();
+    let (numbers, mut boards) = read_data(input);
     for val in numbers {
         boards.retain_mut(|board| {
             if board.extract_number(val) {

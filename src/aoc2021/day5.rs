@@ -1,15 +1,12 @@
 use std::cmp::max;
 use std::cmp::min;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
 
+use aoc_runner_derive::aoc;
+use aoc_runner_derive::aoc_generator;
 use itertools::Itertools;
 
-pub fn execute() {
-    assert_eq!(day5x1(), 5147);
-    assert_eq!(day5x2(), 16925);
-}
+type Gift = Pipe;
 
 #[derive(Default, Debug, Copy, Clone, Eq, PartialEq, Hash)]
 struct Point {
@@ -54,14 +51,15 @@ impl Pipe {
     }
 }
 
-fn read_input()->Vec<Pipe>{
-    BufReader::new(File::open("./inputs/2021/day5.txt").unwrap()).lines().map(|line|{
-        Pipe::from_coord(scan_fmt!(&line.unwrap(),"{},{} -> {},{}",u16,u16,u16,u16).unwrap())
+#[aoc_generator(day5)]
+fn read_input(input: &str) -> Vec<Gift> {
+    input.lines().map(|line| {
+        Gift::from_coord(scan_fmt!(line,"{},{} -> {},{}",u16,u16,u16,u16).unwrap())
     }).collect()
 }
 
-fn day5(use_diagonals:bool) -> usize {
-    let mut pipes = read_input();
+fn day5(input: &[Gift], use_diagonals: bool) -> usize {
+    let mut pipes = input.to_vec();
     let mut map: HashMap<Point, u16> = HashMap::new();
     if !use_diagonals {
         pipes.retain(|el| el.from.x == el.to.x || el.from.y == el.to.y);
@@ -75,13 +73,8 @@ fn day5(use_diagonals:bool) -> usize {
 }
 
 //Alternative solution
-fn day5_2(use_diagonals: bool) -> usize {
-    BufReader::new(File::open("./inputs/2021/day5.txt").unwrap())
-        .lines()
-        .map(|line|
-            Pipe::from_coord(scan_fmt!(&line.unwrap(),"{},{} -> {},{}",u16,u16,u16,u16).unwrap())
-        )
-        .filter(|el| use_diagonals || el.from.x == el.to.x || el.from.y == el.to.y)
+fn day5_2(input: &[Gift], use_diagonals: bool) -> usize {
+    input.iter().filter(|el| use_diagonals || el.from.x == el.to.x || el.from.y == el.to.y)
         .map(|el| el.points())
         .flatten()
         .zip(0..)
@@ -91,10 +84,12 @@ fn day5_2(use_diagonals: bool) -> usize {
         .count()
 }
 
-fn day5x1() -> usize {
-    day5_2(false)
+#[aoc(day5, part1)]
+fn day5x1(input: &[Gift]) -> usize {
+    day5(input, false)
 }
 
-fn day5x2() -> usize {
-    day5_2(true)
+#[aoc(day5, part2)]
+fn day5x2(input: &[Gift]) -> usize {
+    day5(input, true)
 }

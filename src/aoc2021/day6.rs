@@ -1,24 +1,20 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-
+use aoc_runner_derive::aoc;
+use aoc_runner_derive::aoc_generator;
 use itertools::Itertools;
 
-pub fn execute() {
-    assert_eq!(day6x1(), 373378);
-    assert_eq!(day6x2(), 1682576647495);
-}
+type Gift = usize;
 
-fn read_input() -> Vec<usize> {
+#[aoc_generator(day6)]
+fn read_input(input: &str) -> Vec<Gift> {
     let mut v = vec![0usize; 10];
-    BufReader::new(File::open("./inputs/2021/day6.txt").unwrap()).lines()
-        .next().unwrap().unwrap().split(",")
+    input.split(",")
         .map(|e| e.parse::<u8>().unwrap()).zip(0..).into_group_map().iter()
         .for_each(|el| v[*el.0 as usize] = el.1.len());
     v
 }
 
-fn day6(day: u16) -> usize {
-    let mut input = read_input();
+fn day6(input: &[Gift], day: u16) -> usize {
+    let mut input = input.to_vec();
     for _ in 0..day {
         let zero_day = input.remove(0);
         input[6] += zero_day;
@@ -28,10 +24,13 @@ fn day6(day: u16) -> usize {
     input.iter().sum()
 }
 
-fn day6x1() -> usize {
-    day6(80)
+
+#[aoc(day6, part1)]
+fn day6x1(input: &[Gift]) -> usize {
+    day6(input, 80)
 }
 
-fn day6x2() -> usize {
-    day6(256)
+#[aoc(day6, part2)]
+fn day6x2(input: &[Gift]) -> usize {
+    day6(input, 256)
 }
