@@ -28,10 +28,8 @@ impl Entry {
         true_pos[6] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6 && x.len() - x.difference(&true_pos[1]).count() == 1).unwrap());
         true_pos[0] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6 && x.difference(&true_pos[4]).count() == 3).unwrap());
         true_pos[9] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6).unwrap());
-        let letter_c = ALL.difference(&true_pos[6]).next().unwrap();
-        let letter_e = ALL.difference(&true_pos[9]).next().unwrap();
-        true_pos[2] = init_pos.remove(init_pos.iter().position(|e| e.contains(letter_e)).unwrap());
-        true_pos[3] = init_pos.remove(init_pos.iter().position(|e| e.contains(letter_c)).unwrap());
+        true_pos[2] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[4]).count()==2).unwrap());
+        true_pos[3] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[1]).count()==2).unwrap());
         true_pos[5] = init_pos[0];
         true_pos
     }
