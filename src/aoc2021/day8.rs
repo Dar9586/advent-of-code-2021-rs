@@ -28,8 +28,8 @@ impl Entry {
         true_pos[6] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6 && x.len() - x.difference(&true_pos[1]).count() == 1).unwrap());
         true_pos[0] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6 && x.difference(&true_pos[4]).count() == 3).unwrap());
         true_pos[9] = init_pos.remove(init_pos.iter().position(|x| x.len() == 6).unwrap());
-        true_pos[2] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[4]).count()==2).unwrap());
-        true_pos[3] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[1]).count()==2).unwrap());
+        true_pos[2] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[4]).count() == 2).unwrap());
+        true_pos[3] = init_pos.remove(init_pos.iter().position(|e| e.intersection(true_pos[1]).count() == 2).unwrap());
         true_pos[5] = init_pos[0];
         true_pos
     }
@@ -58,8 +58,8 @@ fn day1x1(input: &[Gift]) -> usize {
 #[aoc(day8, part2)]
 fn day1x2(input: &[Gift]) -> usize {
     input.iter()
-             .map(|x| (x.find(), &x.output)).fold(0, |acc, x|
-                 acc + x.1.iter().fold(0, |acc, y|
-                     10 * acc + x.0.iter().position(|n| n == &y).unwrap()),
-             )
+        .map(|x| (x.find(), &x.output)).fold(0, |acc, x|
+        acc + x.1.iter().fold(0, |acc, y|
+            10 * acc + x.0.iter().position(|n| n == &y).unwrap()),
+    )
 }
