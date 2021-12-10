@@ -42,8 +42,8 @@ impl Board {
 fn read_input(input: &str) -> Gift {
     Board {
         board:
-        input.lines().
-            map(|line| line.split("").filter(|x| !x.is_empty())
+        input.lines()
+            .map(|line| line.split("").filter(|x| !x.is_empty())
                 .map(|e| e.parse::<u8>().unwrap()).collect_vec()
             ).collect_vec()
     }
@@ -76,8 +76,7 @@ fn day1x1(input: &Gift) -> usize {
 #[aoc(day9, part2)]
 fn day1x2(input: &Gift) -> usize {
     let mut input = input.clone();
-    let mut basins = find_local_mins(&input).iter()
-        .map(|el| find_basin(&mut input, el)).collect_vec();
-    basins.sort();
-    basins[basins.len() - 3..].iter().product()
+    find_local_mins(&input).iter()
+        .map(|el| find_basin(&mut input, el))
+        .sorted().rev().take(3).product()
 }
