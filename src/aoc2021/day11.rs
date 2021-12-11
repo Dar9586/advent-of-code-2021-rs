@@ -48,13 +48,13 @@ fn step(board: &mut Board) -> usize {
     board.board.iter_mut().flatten().for_each(|e| *e += 1);
     let mut marked: [[bool; 10]; 10] = Default::default();
     loop {
-        let vv = (0..board.len()).cartesian_product(0..board.len())
+        let emit = (0..board.len()).cartesian_product(0..board.len())
             .filter(|x| board.get(x) > 9 && !marked[x.0 as usize][x.1 as usize]).collect_vec();
-        if vv.is_empty() {
+        if emit.is_empty() {
             break;
         }
-        vv.iter().for_each(|v| marked[v.0 as usize][v.1 as usize] = true);
-        vv.iter().map(|e| board.get_adjacent(e)).collect_vec().iter()
+        emit.iter().for_each(|v| marked[v.0 as usize][v.1 as usize] = true);
+        emit.iter().map(|e| board.get_adjacent(e)).collect_vec().iter()
             .flatten().for_each(|i| board.set(&i, board.get(&i) + 1));
     }
     board.board.iter_mut().flatten().filter(|e| **e > 9).for_each(|e| *e = 0);
@@ -71,9 +71,10 @@ fn day1x1(input: &Gift) -> usize {
 #[aoc(day11, part2)]
 fn day1x2(input: &Gift) -> usize {
     let mut board = input.clone();
-    let mut c = 1;
-    while step(&mut board) != (board.len() * board.len()) as usize {
-        c += 1;
+    let mut steps = 1;
+    let size=board.len() * board.len() as usize;
+    while step(&mut board) != size {
+        steps += 1;
     }
-    c
+    steps
 }
