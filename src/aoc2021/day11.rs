@@ -72,7 +72,7 @@ fn day1x1(input: &Gift) -> usize {
 fn day1x2(input: &Gift) -> usize {
     let mut board = input.clone();
     let mut steps = 1;
-    let size=board.len() * board.len() as usize;
+    let size = (board.len() * board.len()) as usize;
     while step(&mut board) != size {
         steps += 1;
     }
