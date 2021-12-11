@@ -47,21 +47,17 @@ fn read_input(input: &str) -> Gift {
 fn step(board: &mut Board) -> usize {
     board.board.iter_mut().flatten().for_each(|e| *e += 1);
     let mut marked: [[bool; 10]; 10] = Default::default();
-    let mut changed = true;
-    while changed {
-        changed = false;
-        for v in (0..board.len()).cartesian_product(0..board.len())
-            .filter(|x| board.get(x) > 9 && !marked[x.0 as usize][x.1 as usize]).collect_vec().iter() {
-            board.set(&v, 0);
-            marked[v.0 as usize][v.1 as usize] = true;
-            changed = true;
-            board.get_adjacent(&v).iter().for_each(|i|board.set(&i, board.get(&i) + 1));
+    loop {
+        let vv = (0..board.len()).cartesian_product(0..board.len())
+            .filter(|x| board.get(x) > 9 && !marked[x.0 as usize][x.1 as usize]).collect_vec();
+        if vv.is_empty() {
+            break;
         }
+        vv.iter().for_each(|v| marked[v.0 as usize][v.1 as usize] = true);
+        vv.iter().map(|e| board.get_adjacent(e)).collect_vec().iter()
+            .flatten().for_each(|i| board.set(&i, board.get(&i) + 1));
     }
-    for v in (0..board.len()).cartesian_product(0..board.len())
-        .filter(|x| marked[x.0 as usize][x.1 as usize]).collect_vec().iter() {
-        board.set(v, 0);
-    }
+    board.board.iter_mut().flatten().filter(|e| **e > 9).for_each(|e| *e = 0);
     marked.iter().flatten().filter(|x| **x).count()
 }
 
