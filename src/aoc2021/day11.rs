@@ -3,21 +3,22 @@ use aoc_runner_derive::aoc_generator;
 use itertools::Itertools;
 
 type Gift = Board;
+type Operand = i8;
 
-#[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
+#[derive(Clone)]
 struct Board {
-    board: Vec<Vec<u8>>,
+    board: Vec<Vec<Operand>>,
 }
 
 impl Board {
-    fn get(&self, e: &(isize, isize)) -> u8 {
+    fn get(&self, e: &(isize, isize)) -> Operand {
         if (0..self.len()).contains(&e.0) && (0..self.len()).contains(&e.1) {
             return self.board[e.0 as usize][e.1 as usize];
         }
         0
     }
 
-    fn set(&mut self, e: &(isize, isize), val: u8) {
+    fn set(&mut self, e: &(isize, isize), val: Operand) {
         if (0..self.len()).contains(&e.0) && (0..self.len()).contains(&e.1) {
             self.board[e.0 as usize][e.1 as usize] = val;
         }
@@ -39,7 +40,7 @@ impl Board {
 fn read_input(input: &str) -> Gift {
     Board {
         board: input.lines().map(|line|
-            line.bytes().map(|a| a - b'0').collect_vec()
+            line.bytes().map(|a| (a - b'0') as Operand).collect_vec()
         ).collect_vec()
     }
 }
