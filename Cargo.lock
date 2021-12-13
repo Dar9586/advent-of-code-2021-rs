@@ -10,7 +10,6 @@ dependencies = [
  "aoc-runner-derive",
  "itertools",
  "lazy_static",
- "retain_mut",
  "scan_fmt",
  "text_io",
 ]
@@ -120,12 +119,6 @@ name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
-
-[[package]]
-name = "retain_mut"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "11000e6ba5020e53e7cc26f73b91ae7d5496b4977851479edb66b694c0675c21"
 
 [[package]]
 name = "ryu"

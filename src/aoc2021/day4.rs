@@ -3,7 +3,6 @@ use std::slice::Iter;
 use std::str::FromStr;
 
 use aoc_runner_derive::aoc;
-use retain_mut::RetainMut;
 
 #[derive(Default)]
 struct Board {
