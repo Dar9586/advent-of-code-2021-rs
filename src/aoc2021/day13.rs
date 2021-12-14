@@ -26,15 +26,14 @@ fn read_input(input: &str) -> Gift {
 }
 
 fn execute_fold(dots: &mut HashSet<Coordinate>, fold: &Folds) {
-    if fold.0 {
-        let folded = dots.drain_filter(|e| e.0 > fold.1)
-            .map(|e| (e.0 - (e.0 - fold.1) * 2, e.1)).collect_vec();
-        dots.extend(folded.iter());
+    let folded = if fold.0 {
+        dots.drain_filter(|e| e.0 > fold.1)
+            .map(|e| (fold.1 * 2 - e.0, e.1)).collect_vec()
     } else {
-        let folded = dots.drain_filter(|e| e.1 > fold.1)
-            .map(|e| (e.0, e.1 - (e.1 - fold.1) * 2)).collect_vec();
-        dots.extend(folded.iter());
+        dots.drain_filter(|e| e.1 > fold.1)
+            .map(|e| (e.0, fold.1 * 2 - e.1)).collect_vec()
     };
+    dots.extend(folded.iter());
 }
 
 fn print_grid(dots: &HashSet<Coordinate>) {
@@ -49,7 +48,7 @@ fn print_grid(dots: &HashSet<Coordinate>) {
 #[aoc(day13, part1)]
 fn day2x1(input: &Gift) -> usize {
     let mut i = input.clone();
-    execute_fold(&mut i.dots, i.folds.iter().next().unwrap());
+    execute_fold(&mut i.dots, &i.folds[0]);
     i.dots.len()
 }
 
