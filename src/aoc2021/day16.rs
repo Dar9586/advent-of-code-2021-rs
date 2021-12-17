@@ -1,5 +1,6 @@
 use aoc_runner_derive::aoc;
 use aoc_runner_derive::aoc_generator;
+use bitvec::field::BitField;
 use bitvec::order::Msb0;
 use bitvec::prelude::BitVec;
 use itertools::Itertools;
@@ -26,10 +27,9 @@ impl Input {
     }
 
     fn parse(&mut self, count: usize) -> usize {
-        let fin = self.data[self.pos..self.pos + count].iter()
-            .fold(0, |fin, k| (fin << 1) | ((k == true) as usize));
+        let result = self.data[self.pos..self.pos + count].load_be();
         self.pos += count;
-        fin
+        result
     }
 }
 
@@ -45,17 +45,13 @@ fn literal_value(input: &mut Input) -> usize {
 fn unpack_operator(input: &mut Input) -> Vec<usize> {
     if input.parse(1) == 0 {
         let mut results = Vec::new();
-        let len = input.parse(15);
-        let mut consumed = 0;
-        while consumed != len {
-            let result = unpack(input);
-            consumed += result.0;
-            results.push(result.1);
+        let target = input.parse(15) + input.pos;
+        while input.pos != target {
+            results.push(unpack(input).1);
         }
-        results
-    } else {
-        (0..input.parse(11)).map(|_| unpack(input).1).collect_vec()
+        return results;
     }
+    (0..input.parse(11)).map(|_| unpack(input).1).collect()
 }
 
 
