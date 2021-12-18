@@ -63,20 +63,14 @@ fn simulate_shoot(input: &Target, mut pos: (i64, i64)) -> i64 {
     i64::MIN
 }
 
-fn brute_shoot_y(input: &Target, initial_y: i64) -> i64 {
-    (input.valid_x_start..=input.valid_x_stop)
-        .map(|x| simulate_shoot(input, (x, initial_y))).max().unwrap()
-}
-
-
 #[aoc(day17, part1)]
 fn day2x1(input: &Gift) -> i64 {
-    (0..=BRUTE_MAX).map(|y| brute_shoot_y(input, y)).max().unwrap()
+    (input.valid_x_start..=input.valid_x_stop).cartesian_product(0..=BRUTE_MAX)
+        .map(|y| simulate_shoot(input, y)).max().unwrap()
 }
 
 #[aoc(day17, part2)]
 fn day2x2(input: &Gift) -> usize {
-    (input.valid_x_start..=BRUTE_MAX)
-        .cartesian_product(-BRUTE_MAX..=BRUTE_MAX)
+    (input.valid_x_start..=input.to_x).cartesian_product(-BRUTE_MAX..=BRUTE_MAX)
         .filter(|x| simulate_shoot(input, *x) != i64::MIN).count()
 }
