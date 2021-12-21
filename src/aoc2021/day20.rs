@@ -1,4 +1,6 @@
 use std::collections::HashSet;
+use std::sync::mpsc::channel;
+use std::thread;
 
 use aoc_runner_derive::aoc;
 use aoc_runner_derive::aoc_generator;
@@ -11,8 +13,10 @@ use bitvec::view::BitView;
 use itertools::Itertools;
 
 type Algorithm = ArrayVec<bool, 512>;
-type Image = HashSet<(i64, i64)>;
-type Border = (i64, i64, i64, i64);
+type Int = u32;
+type Image = HashSet<(Int, Int)>;
+type Border = (Int, Int, Int, Int);
+
 type Gift = Input;
 
 #[derive(Debug, Clone)]
@@ -28,7 +32,7 @@ fn read_input(input: &str) -> Gift {
     let algo = algo.chars().map(|e| e == '#').collect();
     let image = image.lines().enumerate().map(|e|
         e.1.chars().enumerate().filter(|e| e.1 == '#')
-            .map(|k| (e.0 as i64, k.0 as i64)).collect_vec()).flatten().collect();
+            .map(|k| (e.0 as Int + 100, k.0 as Int + 100)).collect_vec()).flatten().collect();
     Input {
         algo,
         image,
@@ -50,7 +54,7 @@ fn apply_algorithm(input: &mut Input) {
     input.image = image;
 }
 
-fn find_index(input: &Input, pos: &(i64, i64)) -> usize {
+fn find_index(input: &Input, pos: &(Int, Int)) -> usize {
     (pos.0 - 1..=pos.0 + 1).cartesian_product(pos.1 - 1..=pos.1 + 1)
         .map(|e| input.image.contains(&(e.0, e.1)) != input.border_fill)
         .fold(0, |acc, e| (acc << 1) | e as usize)
